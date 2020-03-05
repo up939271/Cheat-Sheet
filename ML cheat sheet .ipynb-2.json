@@ -1,0 +1,243 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "This is a cheat sheet I designed with the help of my friend David Olojede Temiloluwa\n",
+    "\n",
+    "#pre-processing \n",
+    "#Data preprocessing is arguable the most important step in the data mining process. \n",
+    "#Usually, all data mining processes will likely undergo similar processes.\n",
+    "#Data-gathering methods are often loosely controlled, resulting in out-of-range values, impossible data combinations, missing values, etc\n",
+    "#If you aim to get meaningful reulst from your dataset, about 70% of your time building an ML algorithm would be spent doing data preprocessing."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#importing libraries \n",
+    "import numpy as np \n",
+    "import pandas as pd \n",
+    "import matplotlib.pyplot as plt \n",
+    "# you would still have to import more libraries when building an ML model e.g SKlearn,model_selection,XGboost,NLP.\n",
+    "#the models you would import varies with the task. however, the modle importted baove is sufficient to preprocess the data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#importing the dataset \n",
+    "dataset = pd.read_csv('Data.csv') #pd.read_csv is from the pandas library\n",
+    "#investigate which column has more missing value\n",
+    "nulls = dataset.isnull().sum()[dataset.isnull().sum() > 0].sort_values(ascending=False).to_frame().rename(columns={0: \"MissingVals\"})\n",
+    "nulls[\"MissingValsPct\"] = nulls[\"MissingVals\"] / len(train)\n",
+    "nulls\n",
+    "\n",
+    "#splitting into x and y\n",
+    "x = dataset.iloc[:,].values# here you assigning the independent valriable/s to x \n",
+    "y = dataset.iloc[:,].values# here you assigning the dependent valriable/s to y\n",
+    "#before the comma means all the rows and after the comma you select with column you want to work with. \n",
+    "#you might have to change the import fuction depending on the data type you are importing.\n",
+    "# you can always add more conditionsbefore importing e.g delimiter ='\\t' for tsv files(this type of file import is used during NLP)\n",
+    "# you can always check more condition by pressing shift + tab in jupyter note book or CMD/CTRL + i on spyder\n",
+    "#N/B indexing in python starts from 0 "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Dealing with missing data\n",
+    "#1. you can drop it\n",
+    "#2. take the mean of columns \n",
+    "#3. take the median of columns\n",
+    "#4. take the most frequent value \n",
+    "x = x.dropna()#to drop missing data \n",
+    "\n",
+    "from sklearn.preprocessing import Imputer \n",
+    "imputer = Imputer(missing_values='NaN',stragery = 'mean', axis = 0)#to use the mean of the column\n",
+    "imputer = imputer.fit(x[:,])#fitting th eimputer to the data\n",
+    "x[:,] = imputer.transform(x[:,])#transforming the data\n",
+    "#N/B:before the comma means all the rows and after the comma you select with column you want to work with. \n",
+    "\n",
+    "imputer = Imputer(missing_values='NaN',stragery = 'median', axis = 0)#to take the median of the column\n",
+    "imputer = imputer.fit(x[:,])#fitting th eimputer to the data\n",
+    "x[:,] = imputer.transform(x[:,])#transforming the data \n",
+    "#N/B:before the comma means all the rows and after the comma you select with column you want to work with. \n",
+    "\n",
+    "imputer = Imputer(missing_values='NaN',stragery = 'most_frequent', axis = 0)#to take the most frequent/mode of the column\n",
+    "imputer = imputer.fit(x[:,]) #fitting th eimputer to the data\n",
+    "x[:,] = imputer.transform(x[:,])#transforming the data \n",
+    "#N/B:before the comma means all the rows and after the comma you select with column you want to work with. \n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Encoding categorical data \n",
+    "#1.labelEncoder \n",
+    "#2.OneHotEncoder\n",
+    "\n",
+    "#label encoder\n",
+    "g= x.iloc[:,]# in this case g is the column that we want to encode \n",
+    "from sklearn import preprocessing \n",
+    "le = preprocessing.LabelEncoder()\n",
+    "le.fit(g)\n",
+    "g=le.transform(g)\n",
+    "x['column _name']=g\n",
+    "#however, the machine might think a value is more important than the other which is not true in most cases so  using a onehotencoder might be better.\n",
+    "\n",
+    "#one hot encoder \n",
+    "from sklearn.preprocessing import LabelEncoder, OneHotEncoder\n",
+    "labelencoder_X = LabelEncoder() # created an object for the function \n",
+    "x[:,] = labelencoder_X.fit_transform(x[:,])# select the column you want to encode\n",
+    "onehotencoder = OneHotEncoder(categorical_features = [0])\n",
+    "x = onehotencoder.fit_transform(x).toarray()\n",
+    "\n",
+    "#dummy varibale trap\n",
+    "\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#splitting into test and train\n",
+    "from sklearn.model_selection import train_test_split #importing the library \n",
+    "x_train,x_test,y_train,y_test = test_train_split(x, y, test_size=0.2, random_state=0)#splitting: test:20% train:80%"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#feature Scaling \n",
+    "Feature scaling is a method used to normalize the range of independent variables or features of data. \n",
+    "In data processing, it is also known as data normalization and is generally performed during the data preprocessing step.\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.preprocessing import StandardScaler#importing the library \n",
+    "sc_X = StandardScaler()#creating an object\n",
+    "x_train = sc_X.fit_transform(x_train)\n",
+    "x_test = sc_X.transform(x_test)\n",
+    "sc_y = StandardScaler()#creating an object\n",
+    "y_train = sc_y.fit_transform(y_train)\n",
+    "#its not used everytime but its still something to have in your ML arsenal."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Regression \n",
+    "1.Linear regression \n",
+    "2.Multilinear regression \n",
+    "3.polynomial regression \n",
+    "4.support vector regression \n",
+    "5.decision tree regression \n",
+    "6. random forest regression "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Linear Regression \n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "MLR = LinearRegression()\n",
+    "MLR.fit(x_train,y_train)\n",
+    "y_pred = MLR.predict(x_test)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Backward elimination (or backward deletion) is the reverse process. \n",
+    "All the independent variables are entered into the equation first and each one is deleted one at a time if they do not contribute to the regression equation. \n",
+    "Stepwise selection is considered a variation of the previous two methods\n",
+    "step 1 : Select a significant level \n",
+    "2: fit the model with all the predictors\n",
+    "3:consider the predictor with the highest value. if the value is greater tahn the initial significant level, remove it if not your have gotten the optimal amount of independent variable."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#MultiLinear Regression \n",
+    "from sklearn.linear_model import LinearRegression\n",
+    "MLR = LinearRegression()\n",
+    "MLR.fit(x_train,y_train)\n",
+    "y_pred = MLR.predict(x_test)\n",
+    "# the difference between a multilinear regression and the regular linear regression is beacuse we would be using a backward elimination method.\n",
+    "#the bacward elimination method is used to remove columns of less importnace to increase the accuracy of the model.\n",
+    "# Building the optimal model using Backward Elimination\n",
+    "import statsmodels.formula.api as sm\n",
+    "x = np.append(arr = np.ones((, )).astype(int), values = x, axis = 1)\n",
+    "x_opt = x[:, []]# the indexes of the columns should be in the []\n",
+    "MLR_OLS = sm.OLS(endog = y, exog = x_opt).fit()\n",
+    "MLR_OLS.summary()\n",
+    "x_opt = x[:, []]\n",
+    "MLR_OLS = sm.OLS(endog = y, exog = x_opt).fit()\n",
+    "MLR_OLS.summary()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Polynomial Regression"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
